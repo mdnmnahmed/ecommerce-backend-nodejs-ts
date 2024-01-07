@@ -5,6 +5,7 @@ import { config } from "dotenv";
 // import Routes ---
 import userRoute from './routes/userRoute.js';
 import { connectDB } from './utils/connectDB.js';
+import { errorMiddleware } from './middlewares/errorMiddleware.js';
 
 config({ path: "./.env" });
 
@@ -22,7 +23,7 @@ app.get("/", (req, res) => {
     res.send("Welcome to E-commerce API's")
 });
 
-
+app.use(errorMiddleware);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

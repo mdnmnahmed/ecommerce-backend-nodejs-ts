@@ -1,8 +1,8 @@
 import express from 'express';
-import { newUser } from '../controllers/userController.js';
+import { newUserController } from '../controllers/userController.js';
 
 const app = express.Router();
 
-app.post("/new", newUser);
+app.post("/new", newUserController);
 
 export default app;

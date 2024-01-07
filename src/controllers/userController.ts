@@ -1,34 +1,40 @@
 import { NextFunction, Request, Response } from "express";
 import { UserModel } from "../models/userModel.js";
 import { NewUserRequestBody } from "../types/commonTypes.js";
+import ErrorHandlerClass from "../utils/ErrorHandlerClass.js";
+import { TryCatchHandler } from "../middlewares/errorMiddleware.js";
 
 
-export const newUser = async (
+export const newUserController = TryCatchHandler(async (
     req: Request<{}, {}, NewUserRequestBody>,
     res: Response,
     next: NextFunction
 ) => {
-    try {
-        const { _id, name, email, gender, dob, photo } = req.body;
+    const { _id, name, email, gender, dob, photo } = req.body;
 
-        const newUser = await UserModel.create({
-            _id,
-            name,
-            email,
-            gender,
-            dob: new Date(dob),
-            photo
-        });
-
-        return res.status(201).json({
+    const existingUser = await UserModel.findById(_id);
+    if (existingUser) {
+        return res.status(200).json({
             success: true,
-            message: `Welcome, ${newUser.name}`,
-        });
-    } catch (error) {
-        return res.status(400).json({
-            success: false,
-            message: `Something went wrong.`,
-            error
+            message: `Welcome, ${existingUser.name}`,
         });
     }
-} 
+
+    if (!_id || !name || !email || !photo || !gender || !dob) {
+        return next(new ErrorHandlerClass("Please add all fields", 400));
+    }
+
+
+    const newUser = await UserModel.create({
+        _id,
+        name,
+        email,
+        gender,
+        dob: new Date(dob),
+        photo
+    });
+    return res.status(201).json({
+        success: true,
+        message: `Welcome, ${newUser.name}`,
+    });
+})
