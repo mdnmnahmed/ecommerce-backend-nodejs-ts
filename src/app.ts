@@ -14,6 +14,10 @@ app.use(express.json());
 const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qzgcd.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`;
 connectDB(MONGODB_URI);
 
+// Use Routes ---
+app.use("/api/v1/user", userRoute);
+
+
 app.get("/", (req, res) => {
     res.send("Welcome to E-commerce API's")
 });
