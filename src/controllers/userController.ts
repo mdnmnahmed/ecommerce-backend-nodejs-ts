@@ -37,4 +37,14 @@ export const newUserController = TryCatchHandler(async (
         success: true,
         message: `Welcome, ${newUser.name}`,
     });
-})
+});
+
+
+export const getAllUsersController = TryCatchHandler(async (req, res, next) => {
+    const allUsers = await UserModel.find({});
+    return res.status(200).json({
+        success: true,
+        message: `Fetched all users`,
+        data: allUsers
+    });
+});
