@@ -48,3 +48,18 @@ export const getAllUsersController = TryCatchHandler(async (req, res, next) => {
         data: allUsers
     });
 });
+
+export const getUserDetailsController = TryCatchHandler(async (req, res, next) => {
+    const { userId } = req.params;
+    const userDetails = await UserModel.findById(userId);
+
+    if (!userDetails) {
+        return next(new ErrorHandlerClass("User not found", 404));
+    }
+
+    return res.status(200).json({
+        success: true,
+        message: `Fetched user details`,
+        data: userDetails
+    });
+});
