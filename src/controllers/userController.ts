@@ -63,3 +63,20 @@ export const getUserDetailsController = TryCatchHandler(async (req, res, next) =
         data: userDetails
     });
 });
+
+export const deleteUserController = TryCatchHandler(async (req, res, next) => {
+    const { userId } = req.params;
+    const userData = await UserModel.findById(userId);
+
+    if (!userData) {
+        return next(new ErrorHandlerClass("User not found", 404));
+    }
+
+    await userData.deleteOne();
+
+    return res.status(200).json({
+        success: true,
+        message: `User deleted successfully`,
+        data: userData
+    });
+});
